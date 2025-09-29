@@ -6,7 +6,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry.Registrar
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -14,14 +13,6 @@ import kotlin.collections.HashMap
 class IsoCountriesPlugin : MethodCallHandler, FlutterPlugin {
 
     private var channel: MethodChannel? = null
-
-    companion object {
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "com.anoop4real.iso_countries")
-            channel.setMethodCallHandler(IsoCountriesPlugin())
-        }
-    }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         if (call.method == "getPlatformVersion") {
@@ -53,6 +44,8 @@ class IsoCountriesPlugin : MethodCallHandler, FlutterPlugin {
     }
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        channel = MethodChannel(binding.binaryMessenger, "com.anoop4real.iso_countries")
+        channel?.setMethodCallHandler(this)
         registerWith(binding.binaryMessenger)
     }
 
